@@ -51,7 +51,7 @@ class SerialReader(QThread):
 
 class MainWindow(QMainWindow):
     # Fixed parameters for the TDOA calculation (no longer user inputs)
-    DEFAULT_MIC_DISTANCE = 1.0  # meters
+    DEFAULT_MIC_DISTANCE = 0.0762    # meters (3 inches)
     DEFAULT_SPEED_OF_SOUND = 1500.0 # m/s (e.g., speed in water)
     BAUD_RATE = 115200 # Match your ESP32's baud rate
 
