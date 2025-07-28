@@ -158,13 +158,23 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(f"Attempting to connect to {self.current_com_port}...")
 
     def _stop_serial_tracking(self):
-        """Stops the serial reader thread."""
-        if self.serial_reader and self.serial_reader.isRunning():
-            self.serial_reader.stop()
+        """Stops the serial reader thread and resets GUI state."""
+        if self.serial_reader: # Check if a thread object exists at all
+            if self.serial_reader.isRunning(): # If it's still running, actively stop it
+                print("Attempting to stop active serial reader thread.") # Added for debugging
+                self.serial_reader.stop() # This method tells the thread to finish
+            else:
+                print("Serial reader thread exists but is not running.") # Added for debugging
+            # In any case (whether it was running or already finished due to an error),
+            # clean up the reference to the thread object.
             self.serial_reader = None
-            self.start_tracking_action.setEnabled(True)
-            self.stop_tracking_action.setEnabled(False)
-            self.statusBar().showMessage("Real-time tracking stopped.")
+        else:
+            print("No serial reader thread instance found.") # Added for debugging
+
+        # These lines should ALWAYS execute to reset the GUI state
+        self.start_tracking_action.setEnabled(True)
+        self.stop_tracking_action.setEnabled(False)
+        self.statusBar().showMessage("Real-time tracking stopped.")
 
     def _handle_live_delta_t(self, delta_t):
         """Receives live delta_t from serial and triggers angle calculation."""
